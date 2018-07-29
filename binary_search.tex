@@ -1,0 +1,317 @@
+\documentclass[compress]{beamer}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+	\useoutertheme{infolines}
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usetikzlibrary{shapes}
+\tikzstyle{block}=[draw opacity=0.7,line width=1.4cm]
+
+\lstloadlanguages{C++}
+\lstnewenvironment{code}
+	{%\lstset{	numbers=none, frame=lines, basicstyle=\small\ttfamily, }%
+	 \csname lst@SetFirstLabel\endcsname}
+	{\csname lst@SaveFirstLabel\endcsname}
+\lstset{% general command to set parameter(s)
+	language=C++, basicstyle=\footnotesize\sffamily, keywordstyle=\slshape,
+	emph=[1]{tipo,usa}, emphstyle={[1]\sffamily\bfseries},
+	basewidth={0.47em,0.40em},
+	columns=fixed, fontadjust, resetmargins, xrightmargin=5pt, xleftmargin=15pt,
+	flexiblecolumns=false, tabsize=2, breaklines,	breakatwhitespace=false, extendedchars=true,
+	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=9pt,
+	frame=l, framesep=3pt,
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% or whatever
+\usepackage{fancyvrb}
+\usepackage{times}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+
+\title[Búsqueda Binaria] % (optional, use only with long paper titles)
+{Búsqueda Binaria}
+
+\author[Quimey Vivas] % (optional, use only with lots of authors)
+{Quimey Vivas \\ Leopoldo Taravilse}
+% - Give the names in the same order as the appear in the paper.
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+\institute[Avature] % (optional, but mostly needed)
+{
+  Avature Argentina
+}
+\date[TC 2018] % (optional, should be abbreviation of conference name)
+{Training Camp 2018}
+
+% Acá se puede insertar el logo de la UBA
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Contenidos}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command:
+
+%\beamerdefaultoverlayspecification{<+->}
+\fvset{fontsize=\scriptsize,numbersep=1mm,commandchars=\\\{\}}
+
+\begin{document}
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Contenidos}
+  \tableofcontents
+  % You might wish to add the option [pausesections]
+\end{frame}
+
+\section{Búsqueda Binaria discreta}
+
+\subsection{Búsqueda binaria en un arreglo}
+
+\begin{frame}{Buscando en listas ordenadas}
+  \begin{itemize}
+    \item Uno de los problemas más comunes que existen es el de querer buscar si un
+          número aparece o no en una lista ordenada. \pause
+    \invisible<1>{\item Es trivial ver que se puede resolver el problema en
+          $O(n)$ donde $n$ es la cantidad de elementos de la lista, simplemente
+          buscando uno por uno en orden.\pause
+    }
+    \invisible<1-2>{\item Hay una forma de aprovechar el hecho de que el arreglo
+          está ordenado.
+          Esta forma de buscar eficientemente se conoce como búsqueda binaria.
+    }
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de Búsqueda Binaria}
+  Supongamos que queremos buscar si el número 22 está en el siguiente arreglo:
+  \begin{Verbatim}
+  1 2 4 6 8 14 15 16 21 22 31 35 44 45 56 87 89 95 99 100 103 112 128
+  \end{Verbatim}
+  \pause
+  \invisible<1>{
+    Podemos preguntarnos
+    ¿Es el primer elemento del arreglo el 22? No,
+    ¿Es el segundo elemento del arreglo el 22?
+    Tampoco... y así hasta que nos preguntamos
+    ¿Es el décimo elemento del arreglo el 22? Sí!
+  }
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de Búsqueda Binaria}
+  Con búsqueda binaria podemos buscar así
+  \begin{Verbatim}
+    \textbf{\textcolor{blue}{1}} 2 4 6 8 14 15 16 21 22 31 \textbf{\textcolor{red}{35}} 44 45 56 87 89 95 99 100 103 112 128 \textbf{\textcolor{blue}{.}}
+  \end{Verbatim}
+  \pause
+  \begin{Verbatim}
+    \textbf{\textcolor{blue}{1}} 2 4 6 8 \textbf{\textcolor{red}{14}} 15 16 21 22 31 \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+  \end{Verbatim}
+  \pause
+  \begin{Verbatim}
+    1 2 4 6 8 \textbf{\textcolor{blue}{14}} 15 16 \textbf{\textcolor{red}{21}} 22 31 \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+  \end{Verbatim}
+  \pause
+  \begin{Verbatim}
+    1 2 4 6 8 14 15 16 \textbf{\textcolor{blue}{21}} \textbf{\textcolor{red}{22}} 31 \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+  \end{Verbatim}
+  \pause
+  \invisible<1-4>{
+    Notemos que en 4 pasos pudimos encontrar el 22 cuando
+    antes nos llevaba 10 pasos.
+  }
+\end{frame}
+
+\begin{frame}[fragile]{Código de la búsqueda binaria}
+\begin{lstlisting}
+# A es el arreglo ordenado, v es el valor a buscar
+# Si v esta en A entonces esta en el intervalo [L, R) de A
+def busqueda_binaria(A, v):
+    L = 0
+    R = len(A)
+    while R - L > 1:
+        M = (L + R) / 2
+        if v < M:
+            R = M
+        else:
+            L = M
+    if A[L] == v:
+        return L
+    return None  # Not found
+\end{lstlisting}
+¿Funciona? ¿Encuentra la primera aparición de $v$? ¿La última? ¿Una cualquiera?
+
+
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de Búsqueda Binaria}
+Buscar un número que no está es mucho más costoso con búsqueda lineal,
+sin embargo con búsqueda binaria es igual de rápido que buscar un número que
+si está. Busquemos por ejemplo el 23.
+\begin{Verbatim}
+\textbf{\textcolor{blue}{1}} 2 4 6 8 14 15 16 21 22 31 \textbf{\textcolor{red}{35}} 44 45 56 87 89 95 99 100 103 112 128 \textbf{\textcolor{blue}{.}}
+\end{Verbatim}
+\pause
+\begin{Verbatim}
+\textbf{\textcolor{blue}{1}} 2 4 6 8 \textbf{\textcolor{red}{14}} 15 16 21 22 31 \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+\end{Verbatim}
+\pause
+\begin{Verbatim}
+1 2 4 6 8 \textbf{\textcolor{blue}{14}} 15 16 \textbf{\textcolor{red}{21}} 22 31 \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+\end{Verbatim}
+\pause
+\begin{Verbatim}
+1 2 4 6 8 14 15 16 \textbf{\textcolor{blue}{21}} \textbf{\textcolor{red}{22}} 31 \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+\end{Verbatim}
+\pause
+\begin{Verbatim}
+1 2 4 6 8 14 15 16 21 \textbf{\textcolor{blue}{22}} \textbf{\textcolor{red}{31}} \textbf{\textcolor{blue}{35}} 44 45 56 87 89 95 99 100 103 112 128
+\end{Verbatim}
+\pause
+\begin{Verbatim}
+1 2 4 6 8 14 15 16 21 \textbf{\textcolor{blue}{22}} \textbf{\textcolor{blue}{31}} 35 44 45 56 87 89 95 99 100 103 112 128
+\end{Verbatim}
+\end{frame}
+
+\begin{frame}{Complejidad de la búsqueda binaria}
+La complejidad de la búsqueda binaria es $O(\log n)$ donde $n$ es el tamaño del
+arreglo. Esto es fácil de probar ya que en cada paso se reduce el espacio de
+búsqueda a la mitad.
+\end{frame}
+
+\subsection{Más allá de los arreglos}
+
+\begin{frame}{Funciones monótonas}
+Cuando tenemos una función $f$ que cumple
+$$x > y \Rightarrow f(x) \geq f(y)$$
+decimos que $f$ es monótona creciente. Si en cambio $f$ cumple
+$$x > y \Rightarrow f(x) \leq f(y)$$
+decimos que $f$ es monótona decreciente.
+Si $f$ es monótona creciente o monótona decreciente decimos que $f$ es monótona.
+
+Cuando una función es monótona creciente (decreciente) podemos aplicar
+búsqueda binaria para buscar el menor valor de $x$ tal que
+$f(x) \geq y$ ($f(x) \leq y$) para un $y$ dado.
+\end{frame}
+
+\begin{frame}{Ejemplo de b\'usqueda binaria con funciones mon\'otonas}
+
+Pedro estudia Ciencias de la Computaci\'on y le quedan por cursar $n$ materias. \'El sabe que si hace una s\'ola materia le va a costar 1 unidad de esfuerzo aprobarla, pero si hace una segunda materia le cuesta 2 unidades de esfuerzo para aprobar la segunda materia, y en general, si hace $i$ materias le cuesta $i$ unidades de esfuerzo aprobar la $i$-\'esima materia.
+
+El sabe que hacer un esfuerzo de $t$ unidades o m\'as lo va a estrezar y por lo tanto va a dejar la carrera. Cu\'antos cuatrimestres necesita para recibirse?
+
+\end{frame}
+
+\begin{frame}{Ejemplo de b\'usqueda binaria con funciones mon\'otonas}
+
+\begin{itemize}
+\item Lo primero que tenemos que hacer es calcular cu\'antas materias puede hacer por cuatrimestre. Luego es una divisi\'on.
+\pause
+\invisible<1>{
+\item Para calcular cu\'antas materias puede hacer por cuatrimestre, sabemos que ese n\'umero $x$ cumple con $\frac{x(x+1)}{2} < t$. Luego hacemos b\'usqueda binaria para encontrar ese m\'aximo valor posible de $x$.
+}
+\end{itemize}
+\end{frame}
+\section{B\'usqueda binaria continua}
+
+\subsection{B\'usqueda binaria para el c\'alculo de funciones inversas}
+
+\begin{frame}{B\'usqueda binaria continua}
+\begin{itemize}
+\item As\'i como usamos b\'usqueda binaria cuando tenemos un dominio discreto, tambi\'en podemos usar b\'usqueda binaria cuando el dominio es continuo.
+\pause
+\invisible<1>{
+\item Por ejemplo, tenemos una funci\'on $f$ mon\'otona creciente y continua y queremos hallar el m\'inimo $x$ tal que $f(x) \geq y$.
+}
+\pause
+\invisible<1-2>{
+\item Como $f$ es continua, existe un $x$ tal que $f(x) = y$, luego queremos encontrar $f^{-1}(y)$.
+}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo de b\'usqueda binaria para encontrar el inverso de una funci\'on}
+Dado un n\'umero $x$, calcular la raiz cuadrada de $x$
+\end{frame}
+
+\begin{frame}[fragile]{Ejemplo de b\'usqueda binaria para encontrar el inverso de una funci\'on}
+\begin{lstlisting}
+double sqrt(double x)
+{
+    double mn = 0, mx = x;
+    while(mx-mn>1e-9)
+    {
+        double med = (mx+mn)/2;
+        if(med*med<x)
+            mn = med;
+        else
+            mx = med;
+    }
+    return mx;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{C\'alculo de la raiz cuadrada}
+\begin{itemize}
+\item A diferencia del caso de la b\'usqueda binaria discreta, cuando el dominio de la b\'usqueda binaria es continuo tenemos que poner un punto de corte arbitrario para la b\'usqueda binaria.
+\pause
+\invisible<1>{
+\item En este caso elegimos $10^{-9}$ ya que es un valor tan chico que es casi despreciable.
+}
+\pause
+\invisible<1-2>{
+\item Cuando la b\'usqueda termina, tanto $mn$ como $mx$ contienen la respuesta con un error de a lo sumo $10^{-9}$.
+}
+\end{itemize}
+\end{frame}
+
+\subsection{B\'usqueda binaria con funciones de imagen booleana}
+
+\begin{frame}{B\'usqueda binaria con predicados booleanos}
+\begin{itemize}
+\item Ya vimos como hace b\'usqueda binaria sobre funciones que tienen una imagen num\'erica y que son monotonas.
+\pause
+\invisible<1>{
+\item Cuando la imagen de la funci\'on es booleana, por ejemplo, dado un predicado booleano $P$, encontrar el m\'inimo $x$ tal que $P(x)$ es verdadero, tambi\'en podemos definir monoton\'ia y aplicar b\'usqueda binaria.
+}
+\pause
+\invisible<1-2>{
+\item Cuando un predicado es falso para todos los $x < x_0$ y verdadero para los $x \geq x_0$ decimos que el predicado mon\'otono. Esto equivale con asignarle 0 a falso y 1 a verdadero, en este caso el predicado es mon\'otono creciente.
+}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo de b\'usqueda binaria con predicados booleanos}
+\begin{block}{Problema}
+Fito tiene que cruzar un cuarto lleno de dinosaurios desde la esquina superior izquierda hasta la esquina inferior derecha. Son dadas las posiciones de los dinosaurios y las dimensiones del cuarto. Se sabe que si pasa a distancia menor a $T$ de un dinosaurio, este lo ve y se lo come. Cu\'al es el m\'inimo $T$ tal que Fito puede lograr su objetivo?
+\end{block}
+\end{frame}
+
+\end{document}
