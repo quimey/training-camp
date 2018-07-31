@@ -220,98 +220,111 @@ búsqueda binaria para buscar el menor valor de $x$ tal que
 $f(x) \geq y$ ($f(x) \leq y$) para un $y$ dado.
 \end{frame}
 
-\begin{frame}{Ejemplo de b\'usqueda binaria con funciones mon\'otonas}
+\begin{frame}{Ejemplo de búsqueda binaria con funciones monótonas}
 
-Pedro estudia Ciencias de la Computaci\'on y le quedan por cursar $n$ materias. \'El sabe que si hace una s\'ola materia le va a costar 1 unidad de esfuerzo aprobarla, pero si hace una segunda materia le cuesta 2 unidades de esfuerzo para aprobar la segunda materia, y en general, si hace $i$ materias le cuesta $i$ unidades de esfuerzo aprobar la $i$-\'esima materia.
+Pedro estudia Ciencias de la Computación y le quedan por cursar $n$ materias.
+Él sabe que si hace una sóla materia le va a costar 1 unidad de esfuerzo
+aprobarla, pero si hace una segunda materia le cuesta 2 unidades de esfuerzo
+para aprobar la segunda materia, y en general, si hace $i$ materias le cuesta
+$i$ unidades de esfuerzo aprobar la $i$-ésima materia.
 
-El sabe que hacer un esfuerzo de $t$ unidades o m\'as lo va a estrezar y por lo tanto va a dejar la carrera. Cu\'antos cuatrimestres necesita para recibirse?
+El sabe que hacer un esfuerzo de $t$ unidades o más lo va a estrezar y por lo
+tanto va a dejar la carrera. Cuántos cuatrimestres necesita para recibirse?
 
 \end{frame}
 
-\begin{frame}{Ejemplo de b\'usqueda binaria con funciones mon\'otonas}
+\begin{frame}{Ejemplo de búsqueda binaria con funciones monótonas}
 
 \begin{itemize}
-\item Lo primero que tenemos que hacer es calcular cu\'antas materias puede hacer por cuatrimestre. Luego es una divisi\'on.
-\pause
-\invisible<1>{
-\item Para calcular cu\'antas materias puede hacer por cuatrimestre, sabemos que ese n\'umero $x$ cumple con $\frac{x(x+1)}{2} < t$. Luego hacemos b\'usqueda binaria para encontrar ese m\'aximo valor posible de $x$.
-}
+  \item Lo primero que tenemos que hacer es calcular cuántas materias puede
+        hacer por cuatrimestre. Luego es una división.\pause
+  \invisible<1>{\item Para calcular cuántas materias puede hacer por
+    cuatrimestre, sabemos que ese número $x$ cumple con $\frac{x(x+1)}{2} < t$.
+    Luego hacemos búsqueda binaria para encontrar ese máximo valor posible de
+    $x$.
+  }
 \end{itemize}
 \end{frame}
-\section{B\'usqueda binaria continua}
+\section{Búsqueda binaria continua}
 
-\subsection{B\'usqueda binaria para el c\'alculo de funciones inversas}
+\subsection{Búsqueda binaria para el cálculo de funciones inversas}
 
-\begin{frame}{B\'usqueda binaria continua}
+\begin{frame}{Búsqueda binaria continua}
 \begin{itemize}
-\item As\'i como usamos b\'usqueda binaria cuando tenemos un dominio discreto, tambi\'en podemos usar b\'usqueda binaria cuando el dominio es continuo.
-\pause
-\invisible<1>{
-\item Por ejemplo, tenemos una funci\'on $f$ mon\'otona creciente y continua y queremos hallar el m\'inimo $x$ tal que $f(x) \geq y$.
-}
-\pause
-\invisible<1-2>{
-\item Como $f$ es continua, existe un $x$ tal que $f(x) = y$, luego queremos encontrar $f^{-1}(y)$.
-}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Ejemplo de b\'usqueda binaria para encontrar el inverso de una funci\'on}
-Dado un n\'umero $x$, calcular la raiz cuadrada de $x$
-\end{frame}
-
-\begin{frame}[fragile]{Ejemplo de b\'usqueda binaria para encontrar el inverso de una funci\'on}
-\begin{lstlisting}
-double sqrt(double x)
-{
-    double mn = 0, mx = x;
-    while(mx-mn>1e-9)
-    {
-        double med = (mx+mn)/2;
-        if(med*med<x)
-            mn = med;
-        else
-            mx = med;
-    }
-    return mx;
-}
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}{C\'alculo de la raiz cuadrada}
-\begin{itemize}
-\item A diferencia del caso de la b\'usqueda binaria discreta, cuando el dominio de la b\'usqueda binaria es continuo tenemos que poner un punto de corte arbitrario para la b\'usqueda binaria.
-\pause
-\invisible<1>{
-\item En este caso elegimos $10^{-9}$ ya que es un valor tan chico que es casi despreciable.
-}
-\pause
-\invisible<1-2>{
-\item Cuando la b\'usqueda termina, tanto $mn$ como $mx$ contienen la respuesta con un error de a lo sumo $10^{-9}$.
-}
+  \item Así como usamos búsqueda binaria cuando tenemos un dominio discreto,
+        también podemos usar búsqueda binaria cuando el dominio es continuo. \pause
+  \invisible<1>{\item Por ejemplo, tenemos una función $f$ monótona creciente y
+        continua y queremos hallar el mínimo $x$ tal que $f(x) \geq y$.
+  }
+  \pause
+  \invisible<1-2>{\item Como $f$ es continua, si el mínimo $x_0$ existe tenemos
+    qué $f(x) = y$, es decir $x_0 = f^{-1}(y)$.
+  }
 \end{itemize}
 \end{frame}
 
-\subsection{B\'usqueda binaria con funciones de imagen booleana}
-
-\begin{frame}{B\'usqueda binaria con predicados booleanos}
+\begin{frame}{Ejemplo de búsqueda binaria para encontrar el inverso de una función}
 \begin{itemize}
-\item Ya vimos como hace b\'usqueda binaria sobre funciones que tienen una imagen num\'erica y que son monotonas.
-\pause
-\invisible<1>{
-\item Cuando la imagen de la funci\'on es booleana, por ejemplo, dado un predicado booleano $P$, encontrar el m\'inimo $x$ tal que $P(x)$ es verdadero, tambi\'en podemos definir monoton\'ia y aplicar b\'usqueda binaria.
-}
-\pause
-\invisible<1-2>{
-\item Cuando un predicado es falso para todos los $x < x_0$ y verdadero para los $x \geq x_0$ decimos que el predicado mon\'otono. Esto equivale con asignarle 0 a falso y 1 a verdadero, en este caso el predicado es mon\'otono creciente.
-}
+  \item Dado un número $x$, calcular la raiz cuadrada de $x$ \pause
+  \invisible<1>{
+    \item ¿Cuál sería el criterio de terminación? ¿Cuántas iteraciones necesitamos?
+  }\pause
+  \invisible<1-2>{
+    \item A diferencia del caso de la búsqueda binaria discreta, cuando el dominio
+    de la búsqueda binaria es continuo tenemos que poner un punto de corte
+    arbitrario para la búsqueda binaria.
+  }
+  \pause
+  \invisible<1-3>{
+    \item Podríamos cortar por ejemplo cuándo $R - L < 10^{-9}$ que nos da una
+    precisión aceptable.
+  }
+  \pause
+  \invisible<1-4>{
+    \item Cuando el ciclo termina, tanto $L$ como $R$ contienen la respuesta con
+    un error de a lo sumo $10^{-9}$.
+  }
+  \pause
+  \invisible<1-5>{\item Método de Newton}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Ejemplo de b\'usqueda binaria con predicados booleanos}
+\subsection{Búsqueda binaria con funciones de imagen booleana}
+
+\begin{frame}{Búsqueda binaria con predicados booleanos}
+\begin{itemize}
+  \item Ya vimos como hace búsqueda binaria sobre funciones que tienen una
+  imagen numérica y que son monotonas.
+  \pause
+  \invisible<1>{
+    \item Cuando la imagen de la función es booleana, por ejemplo, dado un\
+    predicado booleano $P$, encontrar el mínimo $x$ tal que $P(x)$ es verdadero,
+    también podemos definir monotonía y aplicar búsqueda binaria.
+  }
+  \pause
+  \invisible<1-2>{
+    \item Cuando un predicado es falso para todos los $x < x_0$ y verdadero para
+    los $x \geq x_0$ decimos que el predicado monótono.
+    Esto equivale con asignarle $0$ a falso y $1$ a verdadero, en este caso el
+    predicado es monótono creciente.
+  }
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Ejemplo de búsqueda binaria con predicados booleanos}
 \begin{block}{Problema}
-Fito tiene que cruzar un cuarto lleno de dinosaurios desde la esquina superior izquierda hasta la esquina inferior derecha. Son dadas las posiciones de los dinosaurios y las dimensiones del cuarto. Se sabe que si pasa a distancia menor a $T$ de un dinosaurio, este lo ve y se lo come. Cu\'al es el m\'inimo $T$ tal que Fito puede lograr su objetivo?
+Fito tiene que cruzar un cuarto lleno de dinosaurios desde la esquina superior
+izquierda hasta la esquina inferior derecha. Son dadas las posiciones de los
+dinosaurios y las dimensiones del cuarto.
+Se sabe que si pasa a distancia menor a $T$ de un dinosaurio, este lo ve y se
+lo come. Cuál es el mínimo $T$ tal que Fito puede lograr su objetivo?
 \end{block}
 \end{frame}
-
+\subsection{Algunos comentarios}
+\begin{frame}{}
+  \begin{itemize}
+    \item El caso no monónoto:
+    \item Búsqueda ternaria:
+  \end{itemize}
+\end{frame}
 \end{document}
