@@ -158,7 +158,7 @@ def busqueda_binaria(A, v):
     R = len(A)
     while R - L > 1:
         M = (L + R) / 2
-        if v < M:
+        if v < A[M]:
             R = M
         else:
             L = M
