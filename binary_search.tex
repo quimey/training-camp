@@ -45,7 +45,7 @@
 {Búsqueda Binaria}
 
 \author[Quimey Vivas] % (optional, use only with lots of authors)
-{Quimey Vivas \\ Leopoldo Taravilse}
+{Quimey Vivas \\ Leopoldo Taravilse \\ Facundo Gutierrez}
 % - Give the names in the same order as the appear in the paper.
 % - Use the \inst{?} command only if the authors have different
 %   affiliation.
@@ -310,8 +310,101 @@ tanto va a dejar la carrera. Cuántos cuatrimestres necesita para recibirse?
   }
 \end{itemize}
 \end{frame}
+\section{Extras}
+\subsection{Algunos comentarios}
+\begin{frame}{}
+  \begin{itemize}
+    \item El caso no monónoto:
+    \pause
+    \invisible<1>{
+    Si estamos tratando de encontrar $x$ tal que $f(x) = y$ y $f$ es continua
+    podemos usar búsqueda binaria aunque $f$ no sea monónotona (por Bolzano).
+    }
+    \pause
+    \invisible<1-2>{\item Sin cota superior:}
+    \pause
+    \invisible<1-3>{
+      Si no tenemos una cota superior podemos usar búsqueda binaria para encontrarla.
+    }
+    \pause
+    \invisible<1-4>{\item Búsqueda ternaria}
+    \pause
+    \invisible<1-5>{
+      Si $f$ es \textit{unimodal} podemos usar búsqueda ternaria para encontrar el
+      máximo (si $f$ no es unimodal encontramos un extremo local).
+    }
+    \pause
+    \invisible<1-6>{\item Optimización $\Rightarrow$ Decisión}
+  \end{itemize}
+\end{frame}
+\subsection{Ejemplos}
+\begin{frame}{Ejemplo 1}
+	\begin{block}{Máximo Cuadrado en un Tablero}
+	Tenemos un tablero de $m \times n$ ($m$ filas y $n$ columnas).
+  Algunas casillas del tablero están pintadas de blanco y otras de negro.
+  Buscamos encontrar el tamaño del lado del subtablero cuadrado más grande de
+  casillas negras.
+	\end{block}
+	\pause
+	\invisible<1>{\begin{center}
+		\includegraphics[scale=0.15]{tablero.png}
+	\end{center}}
+\end{frame}
 
-\begin{frame}{Ejemplo de búsqueda binaria con predicados booleanos}
+\begin{frame}{Solución}
+	\begin{block}{Cosas que vamos a usar}
+		Supongamos que tenemos una función booleana $f(k,i,j)$ que
+    \textbf{nos dice si hay un cuadrado de casillas negras de lado $k$}
+    en el tablero cuya casilla superior izquierda está situada en la fila $i$
+    y la columna $j$.
+    Por ejemplo, en la imagen anterior, $f(2,2,2)$ es \texttt{true} y
+    $f(3,2,2)$ es \texttt{false}.
+	\end{block}
+	\pause
+  {\fontsize{9.5pt}{11.4pt}
+	\begin{enumerate}
+		\invisible<1>{\item Solución:
+    Podemos \textbf{recorrer todas las casillas}, y en cada una preguntarle a
+    la función $f$ si existe un tablero de tamaño $0,1,2,\dots, \text{min}(n,m)$
+    inclusive. El valor más grande que devolvió \texttt{true} será el lado del
+    cuadrado más grande que tiene la esquina superior izquierda en la casilla
+    que estamos analizando. Tomando el máximo de este número para todas las
+    casillas resolvemos el problema.}
+		\pause
+		\invisible<1-2>{¿Cuántas veces estamos llamando a la función $f$?}
+		\pause
+		\invisible<1-3>{
+      \underline{Respuesta} : $\boxed{n\cdot m \cdot \text{min}(n,m) \sim n^3}$
+    }
+	\end{enumerate}
+  }
+\end{frame}
+
+\begin{frame}{Solución}
+	¿Cómo podemos \textbf{acelerar la solución}? (hacer menos llamados a la $f$)
+	\pause
+
+	\invisible<1>{\textbf{Búsqueda binaria}}
+	\pause
+  \invisible<1-2>{Ok... ¿Pero en qué?}
+	\pause
+	\begin{enumerate}
+		\setcounter{enumi}{1}
+		\invisible<1-3>{
+      \item En la solución anterior, cuando estamos parados en una casilla,
+      podemos hacer búsqueda binaria en \textbf{el lado del cuadrado que buscamos}.
+    }
+	\end{enumerate}
+	\pause
+	\invisible<1-4>{¿Cuántas veces estamos llamando a la función $f$?}
+	\pause
+
+	\invisible<1-5>{
+    \underline{Respuesta} :
+    $\boxed{n\cdot m \cdot \lg \left (\text{min}(n,m)\right ) \sim n^2 \cdot \lg(n)}$
+  }
+\end{frame}
+\begin{frame}{Ejemplo 2}
 \begin{block}{Problema}
 Fito tiene que cruzar un cuarto lleno de dinosaurios desde la esquina superior
 izquierda hasta la esquina inferior derecha. Son dadas las posiciones de los
@@ -320,11 +413,176 @@ Se sabe que si pasa a distancia menor a $T$ de un dinosaurio, este lo ve y se
 lo come. Cuál es el mínimo $T$ tal que Fito puede lograr su objetivo?
 \end{block}
 \end{frame}
-\subsection{Algunos comentarios}
-\begin{frame}{}
-  \begin{itemize}
-    \item El caso no monónoto:
-    \item Búsqueda ternaria:
-  \end{itemize}
+\section{Ventanas Deslizantes}
+\subsection{Ejemplos}
+\begin{frame}
+	\begin{block}{Problema:}
+	Dado un arreglo de $n$ números \textbf{positivos}, y un número $x$, nos
+  interesa saber si existe un subarreglo cuya suma sea $x$.
+	\end{block}
+	\pause
+	\begin{block}{Ejemplos:}
+   		\begin{itemize}
+
+			\item $A = [2, 3, 2, 5, 1, 5, 2, 3]$. Buscamos sumar $ x = 8$
+
+			La respuesta es : \pause "El subarreglo $[2..4]$ suma $8$"
+			\pause
+			\item $A = [2, 3, 2, 5, 1, 5, 2, 3]$. Buscamos sumar $ x = 4$
+
+			La respuesta es : \pause "No hay subarreglo de $A$ que sume $4$"
+		\end{itemize}
+	\end{block}
+\end{frame}
+\begin{frame}{Solución}
+	\begin{enumerate}
+		\item \textbf{Probar todos los subarreglos posibles}.
+    Es decir, todos los subarreglos $[i..j]$ con $0 \leq j < n$ e $ 0 \leq i \leq j$.
+    Para cada uno de ellos calcular \texttt{suma}(i,j),
+    la suma de los números en el subarreglo especificado y ver si es exactamente $x$.
+
+		Complejidad :
+    \pause
+    \invisible<1> {
+      $\mathcal{O}(n^3)$ u $\mathcal{O}(n^2)$ dependiendo de la implementación de la función \texttt{suma}.
+    }
+		\pause
+		\invisible<1-2>{
+      \item Utilizar una \textbf{ventana deslizante} para resolver el problema.
+      La idea es mantener \textbf{dos índices} que son los extremos de nuestra
+      ventana deslizante, al extremo izquierdo lo llamaremos "$i$" y al derecho
+      lo llamaremos "$j$".
+		  Ambos extremos comienzan en el principio del arreglo, y en todo momento
+      vamos a \textbf{mantener} cuánto vale
+      \textbf{la suma de los números dentro de la ventana [i..j)}
+      (notar que no incluimos el extremo derecho).
+    }
+	\end{enumerate}
+\end{frame}
+\begin{frame}{Análisis}
+	\begin{itemize}
+		\item ¿Cuántos pasos hace el algoritmo?
+    \underline{Respuesta} : \pause
+		\invisible<1>{
+       En cada paso, o bien \textbf{aumenta i} o \textbf{aumenta j}.
+       Cada uno de ellos puede ser aumentado a lo sumo $n$ veces.
+       Por lo tanto al cabo de \textbf{$2n$ pasos} en el peor caso,
+       finaliza nuestro algoritmo.
+     }
+		\pause
+    \invisible<1-2>{
+		  \item ¿Por qué es importante que los números sean \textbf{positivos}?
+      \underline{Respuesta} :
+    }
+		\pause
+    \invisible<1-3>{
+      Porque nos permite saber que si en algún momento $\texttt{suma} > x$,
+      entonces todas las ventanas que tienen el mismo valor de $i$ y un $j$
+      mayor tendrán una suma mayor y podemos no mirarlas
+      (de alguna forma, podemos afirmar que \textbf{"ya nos pasamos"}).
+    }
+	\end{itemize}
+\end{frame}
+\begin{frame}{2SUM}
+	\begin{block}{Problema:}
+	Dado un arreglo de $n$ números, y un número $x$. Queremos encontrar dos números del arreglo que sumen $x$, o reportar que no existe tal par.
+	\end{block}
+	\pause
+	\begin{block}{Ejemplos:}
+   		\begin{itemize}
+			\item $A = [7,10,4,1,9,5,9,6]$. Buscamos sumar $ x = 12$
+			La respuesta es : \pause "Sumando $A[0]$ y $A[5]$ obtenemos $12$"
+			\pause
+			\item $A = [7,10,4,1,9,5,9,6]$. Buscamos sumar $ x = 4$
+			La respuesta es : \pause "No hay dos elementos de $A$ que sumen $4$"
+		\end{itemize}
+	\end{block}
+\end{frame}
+
+\begin{frame}{Solución}
+	\begin{block}{Observación clave}
+		Es importante notar que el orden de los números en el arreglo A no juega ningún rol. Entonces podemos asumir que tienen el orden que nos convenga. En particular, podemos asumir que el arreglo está \textbf{ordenado en forma creciente} (u ordenarlo en $\mathcal{O}(n \lg(n))$ )
+	\end{block}
+	\pause
+	\begin{enumerate}
+		\invisible<1>{
+      \item Probar todos los pares de índices, y ver si esos dos números suman
+      o no $x$. De existir un par que sí, reportarlo.
+      Complejidad $\mathcal{O}(n^2)$
+    }
+		\pause
+		\invisible<1-2>{
+      \item Utilizar una variante de la técnica que vimos recién para resolver
+      el problema. En lugar de tener dos índices que siempre aumentan, ahora
+      tendremos dos índices.
+      \textbf{Uno siempre aumenta, el otro siempre disminuye}.
+      Por lo tanto también haremos \textbf{a lo sumo 2n pasos}.
+      Complejidad $\mathcal{O}(n)$.
+    }
+    \pause
+    \invisible<1-3>{
+      \item Búsqueda binaria, hashmap, \dots
+    }
+	\end{enumerate}
+\end{frame}
+\begin{frame}{K-ésima distancia entre puntos de la recta}
+	\begin{block}{Problema:}
+		Dados n puntos en la recta numérica ($x_1, x_2, \dots, x_n$), y un número $k$. Si listamos todas las distancias entre pares de puntos ($x_i,x_j$) con $i < j$ y ordenamos estas distancias (puede haber repetidas). Queremos saber qué distancia queda en el k-ésimo lugar.
+	\end{block}
+	\begin{center}
+		\includegraphics[scale=0.5]{recta.png}
+	\end{center}
+	\pause
+  \vspace{-25pt}
+	\begin{columns}[t]
+        \begin{column}{.3\textwidth}
+			{\footnotesize
+			\begin{enumerate}
+				\item	$\text{dist}(x_1,x_2) = 8$
+				\item	$\text{dist}(x_1,x_3) = 3$
+				\item	$\text{dist}(x_1,x_4) = 4$
+				\item	$\text{dist}(x_2,x_3) = 11$
+				\item	$\text{dist}(x_2,x_4) = 4$
+				\item	$\text{dist}(x_3,x_4) = 7$
+			\end{enumerate}
+			}
+        \end{column}
+        \pause
+        \begin{column}{.7\textwidth}
+        {\Huge
+            $$ D = [3,4,4,7,8,11] $$
+        }
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Solución}
+	\begin{enumerate}
+		\item Calcular todas las distancias, ordenarlas, y ver qué elemento está en
+    el $k$-ésimo lugar. Complejidad : $\mathcal{O}(n^2 + n^2 \lg(n^2))$
+		\pause
+    \invisible<1> {
+		\item Usar \textbf{Binary Search} y una \textbf{Ventana deslizante}.
+    }
+		\pause
+    \invisible<1-2>{
+      Haremos búsqueda binaria en la distancia. Formalmente, la propiedad será:
+
+		  {\small $P(d) : \text{La cantidad de distancias menores que \textbf{d} es menor que k}$}
+    }
+		\pause
+    \invisible<1-3>{
+		  Ordenados los puntos, para una \textbf{distancia $d$ fija},
+      podemos ir moviendo una ventana deslizante que
+      \textbf{
+        para cada extremo izquierdo nos diga cuántos puntos están a distancia menor que $d$
+      }.
+    }
+		\pause
+    \invisible<1-4> {
+		  Complejidad :
+        $\mathcal{O} (\underbrace{n \lg(n)}_{\text{Ordenar}} + \underbrace{\lg(n)}_{\text{BB}} \cdot \underbrace{n}_{\text{VD}}) = \mathcal{O} (n \lg(n))$
+    }
+	\end{enumerate}
 \end{frame}
 \end{document}
