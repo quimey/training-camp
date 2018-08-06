@@ -13,7 +13,7 @@
 }
 
 \usepackage{multicol}
-\usepackage{verbatim} 
+\usepackage{verbatim}
 \usepackage{listings}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
@@ -36,10 +36,7 @@
 	frame=l, framesep=3pt,
 }
 
-\usepackage[spanish]{babel}
-% or whatever
-
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 % or whatever
 
 \usepackage{times}
@@ -51,19 +48,18 @@
 \title[Estructuras] % (optional, use only with long paper titles)
 {Estructuras para operadores asociativos en intervalos}
 
-\author[Agustín Gutiérrez] % (optional, use only with lots of authors)
-{~Agustín Santiago Gutiérrez}
+\author[Quimey Vivas] % (optional, use only with lots of authors)
+{Quimey Vivas \inst{1} \\ Agustín Santiago Gutiérrez}
 % - Give the names in the same order as the appear in the paper.
 % - Use the \inst{?} command only if the authors have different
 %   affiliation.
-\institute[UBA] % (optional, but mostly needed)
+\institute[Avature] % (optional, but mostly needed)
 {
-  %\inst{1}
-  Facultad de Ciencias Exactas y Naturales\\
-  Universidad de Buenos Aires
+  \inst{1}
+  Avature Argentina
 }
-\date[TC Arg 2017] % (optional, should be abbreviation of conference name)
-{Training Camp Argentina 2017}
+\date[TC Arg 2018] % (optional, should be abbreviation of conference name)
+{Training Camp Argentina 2018}
 
 % Acá se puede insertar el logo de la UBA
 % \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
@@ -77,7 +73,7 @@
 {
   \begin{frame}{Contenidos}
   \footnotesize
-  \begin{multicols}{2} 
+  \begin{multicols}{2}
     \tableofcontents[currentsection, currentsubsection]
   \end{multicols}
   \end{frame}
@@ -87,7 +83,7 @@
 \DeclareMathOperator*{\mimax}{max}
 
 % If you wish to uncover everything in a step-wise fashion, uncomment
-% the following command: 
+% the following command:
 
 %\beamerdefaultoverlayspecification{<+->}
 
@@ -99,23 +95,12 @@
   \titlepage
 \end{frame}
 
-
 \begin{frame}
-
-``For the fashion of Minas Tirith was such that it was built on seven levels,
-each delved into a hill, and about each was set a wall, and in each wall
-was a gate.''
-
-\hfill		J.R.R. Tolkien, ``The Return of the King''
-
-\end{frame}
-
-\begin{frame} 
 \footnotesize
-\frametitle{Contenidos} 
-\begin{multicols}{2} 
-\tableofcontents 
-\end{multicols} 
+\frametitle{Contenidos}
+\begin{multicols}{2}
+\tableofcontents
+\end{multicols}
 \end{frame}
 
 \section{Operaciones en rangos} % 15 Min
@@ -134,7 +119,7 @@ was a gate.''
   \item \textbf{Máximo / Mínimo de enteros (o reales)}
   \item Operadores lógicos ``or'' y ``and'' (caso particular de Max y Min)
   \end{itemize}
-  
+
 \end{frame}
 
 \begin{frame}{Más ejemplos}
@@ -144,7 +129,7 @@ was a gate.''
   \item Composición de funciones
   \item Concatenación de Strings
   \end{itemize}
-  
+
 \end{frame}
 
 \begin{frame}{Elemento neutro}
@@ -162,15 +147,15 @@ was a gate.''
   \item $id$ (función identidad) para la composición de funciones
   \item ``'' (string vacío) para la concatenación de Strings
   \end{itemize}
-  
+
 \end{frame}
 
 \begin{frame}{Elemento neutro (cont)}
   Asumiremos por comodidad siempre que sea necesario que existe un elemento neutro.
-  
+
   Notar que si no existiera uno para la operación con la que estemos trabajando, podemos siempre simular uno con un valor ``NULL'' y ``poniendo un if'',
   de forma tal que una operación de NULL con $x$ deja al $x$ intacto como resultado.
-  
+
 \end{frame}
 
 \subsection{Queries importantes}
@@ -182,13 +167,13 @@ was a gate.''
   \end{block}
   Es decir, se consulta el resultado del operador $\triangleright$ sobre los primeros $i$ elementos.
   \pause
-  
+
   \begin{itemize}
   \item Notar que cuando el rango es vacío, la respuesta es el elemento neutro (definición).
   \item Cuando el arreglo inicial nunca se modifica, se dice que el problema es \textbf{estático}.
   \item Si el arreglo se va modificando (generalmente, cambiando el valor en una cierta posición) con el paso del tiempo entre consultas, se dice que el problema es \textbf{dinámico}.
   \end{itemize}
-  
+
 \end{frame}
 
 \begin{frame}{Problema de consulta de intervalos (rangos)}
@@ -198,28 +183,28 @@ was a gate.''
   \end{block}
   Es decir, se consulta el resultado del operador $\triangleright$ sobre el rango de elementos $[i,j)$.
   \pause
-  
+
   \begin{itemize}
   \item Nuevamente cuando el rango es vacío, definimos la respuesta como el elemento neutro.
   \item Al igual que antes, el problema puede ser estático o dinámico según se realicen modificaciones en el arreglo.
   \end{itemize}
-  
+
 \end{frame}
 
 \begin{frame}{Problema de consulta de intervalos (cont)}
-  
+
   Una observación importante es que cuando el operador tiene inverso (Ejemplo: \textbf{la resta}, para el $+$), es posible resolver este problema
          utilizando estructuras que resuelvan consulta de prefijos, mediante:
-         
+
          $$ R(i,j) = inv(P(i)) \triangleright P(j) \mbox{ (por ejemplo, } P(j) - P(i) \mbox{ para el operador +})$$
-  
+
 \end{frame}
 
 \begin{frame}{Las estructuras de datos}
-  
+
   \begin{itemize}
       \item Veremos estructuras que resuelven cada uno de los 4 problemas planteados, en todos los casos para un operador asociativo completamente arbitrario.
-             
+
        $$\begin{array}{rcc}
                     & \mbox{Prefijos}       & \mbox{Intervalos} \\
            \mbox{Estático} & \mbox{\textbf{Tabla Aditiva}}  & \mbox{\textbf{Sparse Table}} \\
@@ -227,20 +212,20 @@ was a gate.''
          \end{array}$$
 
       \item ``Orden de dificultad subjetivo'': \\ \textbf{TablaAditiva} < \textbf{SparseTable} < FenwickTree < \textbf{SegmentTree}
-      
+
   \end{itemize}
-  
+
 \end{frame}
 
 \begin{frame}{Las estructuras de datos (múltiples dimensiones)}
-  
+
   \begin{itemize}
       \item Todas estas estructuras generalizan adecuadamente para resolver los correspondientes problemas en múltiples dimensiones.
       \item Por ejemplo para el caso 2D, podemos usar un Segment Tree donde cada hoja sea un nuevo Segment Tree.
       \item Incluso se podrían combinar de maneras diferentes, teniendo por ejemplo una tabla aditiva en donde cada celda guarda una Sparse Table.
       \item \textbf{Lo veremos solamente para el caso de Tablas Aditivas}, donde es más simple.
   \end{itemize}
-  
+
 \end{frame}
 
 \section{Tablas aditivas} % 20 min
@@ -285,7 +270,7 @@ was a gate.''
 
 \begin{frame}{Arreglo acumulado}
    \begin{block}{Definición}
-      Dado un arreglo bidimensional $v$ de $n \times m$ elementos $v_{i,j}$ con $0 \leq i < n, 0\leq j < m$, 
+      Dado un arreglo bidimensional $v$ de $n \times m$ elementos $v_{i,j}$ con $0 \leq i < n, 0\leq j < m$,
       definimos el \textbf{arreglo acumulado} de $v$ como el arreglo bidimensional $V$ de $(n+1) \times (m+1)$ elementos
       tal que:
       $$V_{i,j} = \sum_{a=0}^{i-1}\sum_{b=0}^{j-1}{v_{a,b}}$$
@@ -323,7 +308,7 @@ was a gate.''
 \begin{frame}{Arreglo acumulado}
     El caso general es completamente análogo... Dejamos las cuentas escritas rápidamente.
    \begin{block}{Definición}
-      Dado un arreglo $v$ de $n_1 \times \cdots \times n_r$ elementos $v_{i_1,\cdots,i_r}$ con $0 \leq i_k < n_k, 1\leq k \leq r$, 
+      Dado un arreglo $v$ de $n_1 \times \cdots \times n_r$ elementos $v_{i_1,\cdots,i_r}$ con $0 \leq i_k < n_k, 1\leq k \leq r$,
       definimos el \textbf{arreglo acumulado} de $v$ como el arreglo $V$ de $(n_1+1) \times \cdots \times (n_r+1)$ elementos
       tal que:
       $$V_{i_1,\cdots,i_r} = \sum_{k_1=0}^{i_1-1} \cdots \sum_{k_r=0}^{i_r-1}{v_{k_1,\cdots,k_r}}$$
@@ -371,9 +356,9 @@ was a gate.''
 \subsection{Tarea}
 \begin{frame}{Tarea}
   \begin{itemize}
-     \item http://www.spoj.pl/problems/KPMATRIX/
-     \item http://www.spoj.pl/problems/TEM/
-     \item http://www.spoj.pl/problems/MATRIX/
+     \item \url{https://www.spoj.com/problems/KPMATRIX/}
+     \item \url{https://www.spoj.com/problems/TEM/}
+     \item \url{https://www.spoj.com/problems/MATRIX/}
   \end{itemize}
 \end{frame}
 
@@ -483,7 +468,7 @@ was a gate.''
 \end{itemize}
 \end{frame}
 
-\subsection{Aplicaciones prácticas} % 
+\subsection{Aplicaciones prácticas} %
 
 \begin{frame}{Aplicaciones prácticas}
 \begin{itemize}
@@ -509,10 +494,10 @@ was a gate.''
       \item Para trabajar con el segment tree asumiremos que $n$ es potencia de $2$. De no serlo, basta extender el arreglo $v$ con a lo sumo $n$
             elementos adicionales para que sea potencia de $2$.
       %\pause
-      \item Utilizaremos un árbol binario completo codificado en un arreglo: 
+      \item Utilizaremos un árbol binario completo codificado en un arreglo:
       %\pause
       \item $A_1$ guardará la raíz del árbol.
-      \item Para cada $i$, los dos hijos del elemento $A_i$ serán $A_{2i}$ y $A_{2i+1}$. 
+      \item Para cada $i$, los dos hijos del elemento $A_i$ serán $A_{2i}$ y $A_{2i+1}$.
       \item El padre de un elemento $i$ será \texttt{i/2}, salvo en el caso de la raíz.
       \item Las hojas tendran índices en $[n,2n)$.
       %\pause
@@ -554,7 +539,7 @@ was a gate.''
     \begin{itemize}
          \item $$f(k,l, r, i,j) = \left\{ \begin{array}{ll}
                                      A_k & \mbox{si $i \leq l < r \leq j$};\\
-                                     +\infty & 
+                                     +\infty &
                                       \mbox{si $r \leq i$ o $l \geq j$} \\
                                      \mimin(f(2k,l,\frac{l+r}{2},i,j), & \\
                                      ,f(2k+1,\frac{l+r}{2},r,i,j))& sino.\end{array} \right.$$
@@ -563,13 +548,40 @@ was a gate.''
          \item La complejidad temporal de un query es $O(\lg n)$
     \end{itemize}
 \end{frame}
+\begin{frame}[fragile]{Código}
+\begin{lstlisting}
+int get_max_aux(int i, int j, int l, int r, int k, int* t, int sz) {
+    if(l >= i && r <= j) return t[k];
+    if(l >= j || r <= i) return 0;
+    return max(
+        get_max_aux(i, j, l, (l + r) / 2, 2 * k, t, sz),
+        get_max_aux(i, j, (l + r) / 2, r, 2 * k + 1, t, sz)
+    );
+}
+int get_max(int i, int j, int* t, int sz) {
+    return get_max_aux(i, j, 0, sz, 1, t, sz);
+}
+void update(int i, int x, int* t, int sz) {
+    t[sz + i] = max(x, t[sz + i]);
+    int p = sz + i;
+    while(p > 1) {
+        p /= 2;
+        t[p] = max(t[2 * p], t[2 * p + 1]);
+    }
+}
+\end{lstlisting}
+\end{frame}
+\subsection{Ejemplos}
 
-\subsection{Ejemplo}
-
-\begin{frame}{Ejemplo}
-    ``Suma máxima de dos elementos en rango''
+\begin{frame}{Ejemplos}
     \begin{itemize}
-         \item http://www.spoj.com/problems/KGSS/
+         \item \url{https://www.spoj.com/problems/KGSS/}
+         \item \url{https://www.hackerrank.com/contests/gs-codesprint/challenges/time-series-queries}
+         \item \url{https://www.hackerrank.com/contests/openbracket-2017/challenges/sliding-inversion}
+         \item \url{https://www.hackerrank.com/contests/w33/challenges/path-matching}
+         \item \url{https://www.hackerrank.com/contests/101hack49/challenges/bigger-arrays}
+         \item \url{https://coj.uci.cu/24h/problem.xhtml?pid=2812}
+         \item \url{https://coj.uci.cu/24h/problem.xhtml?pid=2074}
     \end{itemize}
 \end{frame}
 
@@ -594,7 +606,7 @@ was a gate.''
     \item Introducidos en la literatura en: \\
             Peter M. Fenwick (1994). ``A new data structure for cumulative frequency tables''. Software: Practice and Experience
     \item Se utilizan para implementar eficientemente algoritmos de compresión adaptativa mediante Arithmetic Encoding (motivación original de Fenwick)
-    \item $\frac{\mbox{Fenwick}}{\mbox{Tabla Aditiva}} = \frac{\mbox{Segment Tree}}{\mbox{Sparse Table}}$ 
+    \item $\frac{\mbox{Fenwick}}{\mbox{Tabla Aditiva}} = \frac{\mbox{Segment Tree}}{\mbox{Sparse Table}}$
     \item Un Segment Tree es estrictamente más poderoso como estructura de datos. El Fenwick Tree tiene la misma complejidad, pero suele ser más fácil
            de programar y tener mejores constantes.
   \end{itemize}
